@@ -9,31 +9,25 @@
 
 void matrix_multiply_local(const double_t *const mat_a, const double_t *const mat_b, double_t *result,
                            const uint32_t size) {
-    for (uint32_t row = 0; row < size; row++) {
-        for (uint32_t col = 0; col < size; col++) {
-            for (uint32_t idx = 0; idx < size; idx++) {
+    for (uint32_t row = 0; row < size; ++row) {
+        for (uint32_t col = 0; col < size; ++col) {
+            for (uint32_t idx = 0; idx < size; ++idx) {
                 result[row * size + col] += mat_a[row * size + idx] * mat_b[idx * size + col];
             }
         }
     }
 }
 
-void cannon(const double_t *const global_mat_a, const double_t *const global_mat_b, double_t *global_result,
+void cannon(const double_t *global_mat_a, const double_t *global_mat_b, double_t *global_result,
             const uint32_t mat_size, int32_t rank, const int32_t comm_size) {
-    uint32_t local_size, local_area;
+    const uint32_t local_size = mat_size / sqrt(comm_size);
+    const uint32_t local_area = local_size * local_size;
 
-    double_t *local_mat_a;
-    double_t *local_mat_b;
-    double_t *local_result;
+    double_t *local_mat_a = malloc(local_area * sizeof(double_t));
+    double_t *local_mat_b = malloc(local_area * sizeof(double_t));
+    double_t *local_result = malloc(local_area * sizeof(double_t));
 
-    local_size = mat_size / sqrt(comm_size);
-    local_area = local_size * local_size;
-
-    local_mat_a = malloc(local_area * sizeof(double_t));
-    local_mat_b = malloc(local_area * sizeof(double_t));
-    local_result = malloc(local_area * sizeof(double_t));
-
-    for (uint32_t i = 0; i < local_area; i++) {
+    for (uint32_t i = 0; i < local_area; ++i) {
         local_result[i] = 0.0;
     }
 

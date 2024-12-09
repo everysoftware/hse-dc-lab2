@@ -14,7 +14,7 @@ enum PARTITION {
     BLOCK_PARTITION
 };
 
-void mul_mat_by_vec(enum PARTITION mode, const double_t *mat, const double_t *vec, double_t *result, uint32_t rows,
+void matrix_vector_multiply(enum PARTITION mode, const double_t *mat, const double_t *vec, double_t *result, uint32_t rows,
                     uint32_t cols, int32_t rank, int32_t comm_size);
 
 #endif

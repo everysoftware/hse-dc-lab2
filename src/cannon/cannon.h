@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdint.h>
 
-void cannon(double_t *global_mat_a, double_t *global_mat_b, double_t *global_result, uint32_t mat_size,
-            int32_t rank, int32_t comm_size);
+void cannon(const double_t *global_mat_a, const double_t *global_mat_b, double_t *global_result,
+            uint32_t mat_size, int32_t rank, int32_t comm_size);
 
 #endif //CANNON_H

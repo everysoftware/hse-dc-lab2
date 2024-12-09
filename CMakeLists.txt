@@ -20,7 +20,8 @@ add_executable(cannon
 
 add_executable(dirichlet
         src/dirichlet/dirichlet.c
-        src/dirichlet/dirichlet.h)
+        src/dirichlet/dirichlet.h
+        src/dirichlet/main.c)
 
 
 # Add libraries for code completion and compiling

@@ -11,7 +11,7 @@
 double_t vector_sum(const double_t *const vec, const uint32_t size) {
     double_t total = 0.0;
 
-    for (uint32_t i = 0; i < size; i++) {
+    for (uint32_t i = 0; i < size; ++i) {
         total += vec[i];
     }
 
@@ -22,12 +22,13 @@ void matrix_column_multiply(const double_t *const mat, double_t *result, const d
                             const uint32_t cols, const int32_t rank, const int32_t comm_size) {
     uint32_t local_col_count = cols / comm_size;
     const uint32_t start_col = rank * local_col_count;
-    if (rank + 1 == comm_size)
+    if (rank + 1 == comm_size) {
         local_col_count += cols % comm_size;
+    }
     const uint32_t end_col = start_col + local_col_count;
 
-    for (uint32_t row = 0; row < rows; row++) {
-        for (uint32_t col = start_col; col < end_col; col++) {
+    for (uint32_t row = 0; row < rows; ++row) {
+        for (uint32_t col = start_col; col < end_col; ++col) {
             result[row] += mat[row * cols + col] * vec[col];
         }
     }
@@ -35,7 +36,7 @@ void matrix_column_multiply(const double_t *const mat, double_t *result, const d
 
 double_t row_vector_dot_product(const double_t *const row, const double_t *const col, const uint32_t size) {
     double_t result = 0.0;
-    for (uint32_t i = 0; i < size; i++) {
+    for (uint32_t i = 0; i < size; ++i) {
         result += row[i] * col[i];
     }
     return result;
@@ -48,7 +49,7 @@ void row_partition_multiply(const double_t *const mat, const double_t *const vec
     double_t *local_result = malloc(partition_size * sizeof(double_t));
     memset(local_result, 0, partition_size * sizeof(double_t));
 
-    for (uint32_t i = 0; i < partition_size; i++) {
+    for (uint32_t i = 0; i < partition_size; ++i) {
         local_result[i] = row_vector_dot_product(mat + i * cols, vec, cols);
     }
 
@@ -99,8 +100,8 @@ void block_partition_multiply(const double_t *const mat, const double_t *const v
             exit(EXIT_FAILURE);
     }
 
-    for (uint32_t i = row_start; i < row_end; i++) {
-        temp_result[i] += row_vector_dot_product((mat + i * cols) + col_offset, vec + col_offset, half_cols);
+    for (uint32_t i = row_start; i < row_end; ++i) {
+        temp_result[i] += row_vector_dot_product(mat + i * cols + col_offset, vec + col_offset, half_cols);
     }
 
     MPI_Reduce(temp_result, result, rows, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
